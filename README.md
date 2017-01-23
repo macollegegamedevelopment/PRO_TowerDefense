@@ -13,10 +13,11 @@ All lessons below can be accessed via the branches of this repository.
 - Lesson 2 - Enemy Movement / Waypoints
 - Lesson 3 - Tower Shooting
 
-Lessons Todo:
-Wave system / spawning enemies
-Gameflow
-Multiple towers / refactor
-Tower upgrades
-Building Towers
-Implementing Art
+### Lessons Todo:
+- Wave system / spawning enemies
+- Gameflow
+- Multiple towers / refactor
+- Tower upgrades
+- Building Towers
+- Implementing Art
+- Interface
