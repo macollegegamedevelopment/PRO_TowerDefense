@@ -20,6 +20,7 @@ public class Path : MonoBehaviour {
 	void OnDrawGizmos() {
 
 		if (drawPath) {
+			Gizmos.color = Color.cyan;
 			Gizmos.DrawLine (startpoint.position, waypoints [0].position);
 			for (int i = 1; i < waypoints.Length; i++) {
 				Gizmos.DrawLine (waypoints [i].position, waypoints [i - 1].position);
