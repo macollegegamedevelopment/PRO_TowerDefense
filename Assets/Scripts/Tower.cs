@@ -24,9 +24,10 @@ public class Tower : MonoBehaviour {
 	private Health enemyHealth;
 	private bool hasTarget;
 	private List<GameObject> targetsInRange;
-	private float angleToTarget;
+	private float targetAngle;
+	private float angleWithTarget;
 	private LineRenderer lineRenderer;
-	private float nextShootTime;
+	private float nextTickTime;
 
 	void Awake() {
 		lineRenderer = GetComponent<LineRenderer> ();
@@ -35,6 +36,7 @@ public class Tower : MonoBehaviour {
 	void Start() {
 		targetsInRange = new List<GameObject> ();
 		lineRenderer.enabled = false;
+		lineRenderer.SetPosition (0, transform.position);
 	}
 
 	void Update() {
@@ -56,10 +58,12 @@ public class Tower : MonoBehaviour {
 			if (targetsInRange.Contains (target)) {
 				CalculateAngleToTarget ();
 				RotateToTarget ();
-				if ((Vector3.Angle(target.transform.position, transform.forward)) < minimalShootAngle) {
+				if (angleWithTarget <= minimalShootAngle) {
 					lineRenderer.SetPosition (1, target.transform.position);
 					lineRenderer.enabled = true;
 					TickDamage ();
+				} else {
+					lineRenderer.enabled = false;
 				}
 			} else  {
 				target = null;
@@ -73,7 +77,8 @@ public class Tower : MonoBehaviour {
 
 	void CalculateAngleToTarget() {
 		Vector3 direction = target.transform.position - transform.position;
-		angleToTarget = Mathf.Atan2 (direction.x, direction.z) * Mathf.Rad2Deg;
+		targetAngle = Mathf.Atan2 (direction.x, direction.z) * Mathf.Rad2Deg;
+		angleWithTarget = Vector3.Angle (direction, transform.forward);
 	}
 
 	void RotateToTarget() {
@@ -83,14 +88,14 @@ public class Tower : MonoBehaviour {
 		// another non-physics way of rotating, interpolating the rotation
 		// we need to use the function above to calucate the desired angle
 		transform.rotation = Quaternion.Lerp(transform.localRotation, 
-			Quaternion.Euler(new Vector3(0f, angleToTarget, 0f)), 
+								Quaternion.Euler(new Vector3(0f, targetAngle, 0f)), 
 								rotationSpeed * Time.deltaTime);
  	}
 
 	void TickDamage() {
-		if (Time.time >= nextShootTime) {
+		if (Time.time >= nextTickTime) {
 			enemyHealth.TakeDamage (damage);
-			nextShootTime = Time.time + tickSpeed;
+			nextTickTime = Time.time + tickSpeed;
 			print ("Shoot");
 		}
 	}
