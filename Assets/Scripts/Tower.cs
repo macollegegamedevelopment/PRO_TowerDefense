@@ -33,11 +33,11 @@ public class Tower : MonoBehaviour {
 			}
 		} else {
 			if (targetsInRange.Contains (target)) {
-				print ("shoot");
+				print ("Shoot");
 			} else  {
 				target = null;
 				hasTarget = false;
-				print ("lost target");
+				print ("Lost target");
 			}
 		}
 
