@@ -1,27 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour 
 {
 	[SerializeField]
-	private GameObject objectToSpawn;
+	private GameObject _objectToSpawn;
 
-	private Vector3 spawnPosition;
-	private float spawnDelay = 1f;
+	private Vector3 _spawnPosition;
+	private float _spawnDelay = 1f;
 
-	void Start() {	
-		spawnPosition = new Vector3 (transform.position.x, 0.25f, transform.position.z);
+    private void Start() {
+		_spawnPosition = new Vector3 (transform.position.x,
+		                    _objectToSpawn.transform.position.y,
+		                    transform.position.z);
 	}
 
-	void Update() {
+    private void Update() {
 		if (Input.GetKeyDown (KeyCode.Space)) {
 			Spawn ();
 		}
 	}
 
-	void Spawn() {
-		GameObject e = Instantiate (objectToSpawn, spawnPosition, Quaternion.identity) as GameObject;
+    private void Spawn() {
+        var e = Instantiate(_objectToSpawn, _spawnPosition, Quaternion.identity);
 		e.transform.SetParent (transform);
 	}
 }

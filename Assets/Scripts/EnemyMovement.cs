@@ -1,65 +1,64 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent (typeof(Rigidbody))]
 public class EnemyMovement : MonoBehaviour {
 
 	[SerializeField]
-	private float movementSpeed;
+	private float _movementSpeed;
 	[SerializeField]
 	[Range(0.1f, 3)]
-	private float waypointActionRadius;
+	private float _waypointActionRadius;
 
-	private Rigidbody rigidbody;
-	private Transform[] waypoints;
-	private int waypointIndex;
-	Vector3 targetPosition;
-	bool reachedEndOfPath;
+	private Rigidbody _rigidbody;
+	private Transform[] _waypoints;
+	private int _waypointIndex;
+	private Vector3 _targetPosition;
+	private  bool _reachedEndOfPath;
 
-	void Awake() {
-		rigidbody = GetComponent<Rigidbody> ();	
+	private void Awake() {
+		_rigidbody = GetComponent<Rigidbody> ();
 	}
 
-	void Start() {
+	private void Start() {
 		Path levelPath = GameObject.FindGameObjectWithTag ("Path").GetComponent<Path>();
-		waypoints = levelPath.GetWaypoints ();
-		waypointIndex = 0;
-		reachedEndOfPath = false;
+		_waypoints = levelPath.GetWaypoints ();
+		_waypointIndex = 0;
+		_reachedEndOfPath = false;
 		RotateToWaypoint ();
 	}
 
-	void Update() {
-		if (!reachedEndOfPath) {
-			float distance = Vector3.Distance (targetPosition, transform.position);
-			if (distance <= waypointActionRadius) {
-				if (waypointIndex < waypoints.Length-1) {
-					waypointIndex++;
+	private void Update() {
+		if (!_reachedEndOfPath) {
+			var distance = Vector3.Distance (_targetPosition, transform.position);
+			if (distance <= _waypointActionRadius) {
+				if (_waypointIndex < _waypoints.Length-1) {
+					_waypointIndex++;
 					RotateToWaypoint ();
 				} else {
-					reachedEndOfPath = true;
+					_reachedEndOfPath = true;
 					print ("Reached End Of Path");
 				}
 			}
 		}
 	}
 
-	void FixedUpdate() {
-		if (!reachedEndOfPath) {
-			Vector3 direction = transform.forward;
-			Vector3 velocity = direction * movementSpeed * Time.fixedDeltaTime;
-			rigidbody.MovePosition (rigidbody.position + velocity);
-		}
+	private void FixedUpdate() {
+	    if (!_reachedEndOfPath)
+	    {
+	        var direction = transform.forward;
+	        var velocity = direction * _movementSpeed * Time.fixedDeltaTime;
+	        _rigidbody.MovePosition(_rigidbody.position + velocity);
+	    }
 	}
 
-	void RotateToWaypoint() {
+    private void RotateToWaypoint() {
 		// for now, we instantly set the rotation to a specific target.
 		// later we could interpolate between 2 points, creating a smoother rotation
-		targetPosition = new Vector3 (waypoints [waypointIndex].position.x,
+		_targetPosition = new Vector3 (_waypoints [_waypointIndex].position.x,
 			                   transform.position.y,
-			                   waypoints [waypointIndex].position.z);
+			                   _waypoints [_waypointIndex].position.z);
 		
-		transform.LookAt (targetPosition);
+		transform.LookAt (_targetPosition);
 
 	}
 }

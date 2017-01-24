@@ -1,29 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 // the path class is a simple container for waypoints.
 // each enemy that spawns has to get the waypoints from this class
 public class Path : MonoBehaviour {
 	[SerializeField]
-	private Transform startpoint;
+	private Transform _startpoint;
 	[SerializeField]
-	private Transform[] waypoints;
+	private Transform[] _waypoints;
 
 	[SerializeField]
-	bool drawPath;
+	private bool _drawPath;
 
 	public Transform[] GetWaypoints() {
-		return waypoints;
+		return _waypoints;
 	}
 
-	void OnDrawGizmos() {
-
-		if (drawPath) {
+	private void OnDrawGizmos() {
+		if (_drawPath) {
 			Gizmos.color = Color.cyan;
-			Gizmos.DrawLine (startpoint.position, waypoints [0].position);
-			for (int i = 1; i < waypoints.Length; i++) {
-				Gizmos.DrawLine (waypoints [i].position, waypoints [i - 1].position);
+			Gizmos.DrawLine (_startpoint.position, _waypoints [0].position);
+			for (int i = 1; i < _waypoints.Length; i++) {
+				Gizmos.DrawLine (_waypoints [i].position, _waypoints [i - 1].position);
 			}
 		}
 	}

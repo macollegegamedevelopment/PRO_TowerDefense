@@ -1,102 +1,101 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Tower : MonoBehaviour {
 
 	[Header ("Targeting")]
 	[SerializeField]
-	private float targetRadius;
+	private float _targetRadius;
 	[SerializeField]
-	private float rotationSpeed;
+	private float _rotationSpeed;
 	[SerializeField]
-	private LayerMask layer;
+	private LayerMask _layer;
 
 	[Header ("Shooting")]
 	[SerializeField]
-	private float damage;
+	private float _damage;
 	[SerializeField]
-	private float tickSpeed;
+	private float _tickSpeed;
 	[SerializeField]
-	private float minimalShootAngle;
+	private float _minimalShootAngle;
 
-	private GameObject target;
-	private Health enemyHealth;
-	private bool hasTarget;
-	private List<GameObject> targetsInRange;
-	private float targetAngle;
-	private float angleWithTarget;
-	private LineRenderer lineRenderer;
-	private float nextTickTime;
+	private GameObject _target;
+	private Health _enemyHealth;
+	private bool _hasTarget;
+	private List<GameObject> _targetsInRange;
+	private float _targetAngle;
+	private float _angleWithTarget;
+	private LineRenderer _lineRenderer;
+	private float _nextTickTime;
 
-	void Awake() {
-		lineRenderer = GetComponent<LineRenderer> ();
+    private void Awake() {
+		_lineRenderer = GetComponent<LineRenderer> ();
 	}
 
-	void Start() {
-		targetsInRange = new List<GameObject> ();
-		lineRenderer.enabled = false;
-		lineRenderer.SetPosition (0, transform.position);
+    private void Start() {
+		_targetsInRange = new List<GameObject> ();
+		_lineRenderer.enabled = false;
+		_lineRenderer.SetPosition (0, transform.position);
 	}
 
-	void Update() {
-		Collider[] cols = Physics.OverlapSphere (transform.position, targetRadius, layer);
-		targetsInRange.Clear ();
+    private void Update() {
+		Collider[] cols = Physics.OverlapSphere (transform.position, _targetRadius, _layer);
+		_targetsInRange.Clear ();
 
-		foreach (Collider col in cols) {
-			targetsInRange.Add (col.gameObject);
+		foreach (var col in cols) {
+			_targetsInRange.Add (col.gameObject);
 		}
 
-		if (!hasTarget) {
-			if (targetsInRange.Count > 0) {
-				target = targetsInRange [0];
-				enemyHealth = target.GetComponent<Health> ();
-				hasTarget = true;
-				print ("Has Target");
-			}
+		if (!_hasTarget) {
+		    if (_targetsInRange.Count <= 0) return;
+		    _target = _targetsInRange[0];
+		    _enemyHealth = _target.GetComponent<Health>();
+		    _hasTarget = true;
+		    print("Has Target");
 		} else {
-			if (targetsInRange.Contains (target)) {
+			if (_targetsInRange.Contains (_target)) {
 				RotateToTarget ();
-				if (angleWithTarget <= minimalShootAngle) {
-					lineRenderer.SetPosition (1, target.transform.position);
-					lineRenderer.enabled = true;
+				if (_angleWithTarget <= _minimalShootAngle) {
+					_lineRenderer.SetPosition (1, _target.transform.position);
+					_lineRenderer.enabled = true;
 					TickDamage ();
 				} else {
-					lineRenderer.enabled = false;
+					_lineRenderer.enabled = false;
 				}
 			} else  {
-				target = null;
-				hasTarget = false;
-				lineRenderer.enabled = false;
+				_target = null;
+				_hasTarget = false;
+				_lineRenderer.enabled = false;
 				print ("Lost target");
 			}
 		}
 
 	}
 
-	void RotateToTarget() {
+    private void RotateToTarget() {
 		// the simple, fast way of rotating
 		//transform.LookAt (target.transform.position);
 
 		// another non-physics way of rotating, interpolating the rotation
 		// we need to use the function above to calucate the desired angle
-		Vector3 direction = target.transform.position - transform.position;
-		targetAngle = Mathf.Atan2 (direction.x, direction.z) * Mathf.Rad2Deg;
-		angleWithTarget = Vector3.Angle (direction, transform.forward);
+		Vector3 direction = _target.transform.position - transform.position;
+		_targetAngle = Mathf.Atan2 (direction.x, direction.z) * Mathf.Rad2Deg;
+		_angleWithTarget = Vector3.Angle (direction, transform.forward);
 
 		transform.rotation = Quaternion.Lerp(transform.localRotation, 
-								Quaternion.Euler(new Vector3(0f, targetAngle, 0f)), 
-								rotationSpeed * Time.deltaTime);
+								Quaternion.Euler(new Vector3(0f, _targetAngle, 0f)),
+								_rotationSpeed * Time.deltaTime);
  	}
 
-	void TickDamage() {
-		if (Time.time >= nextTickTime) {
-			enemyHealth.TakeDamage (damage);
-			nextTickTime = Time.time + tickSpeed;
+	private void TickDamage() {
+		if (Time.time >= _nextTickTime) {
+			_enemyHealth.TakeDamage (_damage);
+			_nextTickTime = Time.time + _tickSpeed;
 			print ("Shoot");
 		}
 	}
-	void OnDrawGizmos() {
-		Gizmos.DrawWireSphere (transform.position, targetRadius);
+
+    private void OnDrawGizmos() {
+		Gizmos.DrawWireSphere (transform.position, _targetRadius);
 	}
 }
