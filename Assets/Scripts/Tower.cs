@@ -56,7 +56,6 @@ public class Tower : MonoBehaviour {
 			}
 		} else {
 			if (targetsInRange.Contains (target)) {
-				CalculateAngleToTarget ();
 				RotateToTarget ();
 				if (angleWithTarget <= minimalShootAngle) {
 					lineRenderer.SetPosition (1, target.transform.position);
@@ -75,18 +74,16 @@ public class Tower : MonoBehaviour {
 
 	}
 
-	void CalculateAngleToTarget() {
-		Vector3 direction = target.transform.position - transform.position;
-		targetAngle = Mathf.Atan2 (direction.x, direction.z) * Mathf.Rad2Deg;
-		angleWithTarget = Vector3.Angle (direction, transform.forward);
-	}
-
 	void RotateToTarget() {
 		// the simple, fast way of rotating
 		//transform.LookAt (target.transform.position);
 
 		// another non-physics way of rotating, interpolating the rotation
 		// we need to use the function above to calucate the desired angle
+		Vector3 direction = target.transform.position - transform.position;
+		targetAngle = Mathf.Atan2 (direction.x, direction.z) * Mathf.Rad2Deg;
+		angleWithTarget = Vector3.Angle (direction, transform.forward);
+
 		transform.rotation = Quaternion.Lerp(transform.localRotation, 
 								Quaternion.Euler(new Vector3(0f, targetAngle, 0f)), 
 								rotationSpeed * Time.deltaTime);
