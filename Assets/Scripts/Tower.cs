@@ -14,7 +14,6 @@ public abstract class Tower : MonoBehaviour {
 	private  bool _hasTarget;
     protected List<GameObject> TargetsInRange;
 
-
     protected abstract void OnTargetEnter();
     protected abstract bool OnTargetStay();
     protected abstract void OnTargetExit();
