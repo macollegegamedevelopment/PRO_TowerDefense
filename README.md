@@ -10,7 +10,7 @@ All lessons below can be accessed via the branches of this repository.
 ## Lessons
 
 - [Lesson 1 - Project Setup & Tower Targeting](https://github.com/macollegegamedevelopment/PRO_TowerDefense/tree/les1)
-- Lesson 2 - Enemy Movement / Waypoints
+- [Lesson 2 - Enemy Movement / Waypoints](https://github.com/macollegegamedevelopment/PRO_TowerDefense/tree/les2) 
 - Lesson 3 - Tower Shooting
 
 ### Lessons Todo:
